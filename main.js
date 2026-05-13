@@ -338,3 +338,25 @@ document.addEventListener('DOMContentLoaded', () => {
     
     setTimeout(updateProgress, 500);
 });
+
+// --- MUSIC PLAYER LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const bgMusic = document.getElementById('bg-music');
+    const musicToggle = document.getElementById('music-toggle');
+    const iconOn = document.querySelector('.music-icon-on');
+    const iconOff = document.querySelector('.music-icon-off');
+
+    if (bgMusic && musicToggle) {
+        musicToggle.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                iconOff.style.display = 'none';
+                iconOn.style.display = 'block';
+            } else {
+                bgMusic.pause();
+                iconOff.style.display = 'block';
+                iconOn.style.display = 'none';
+            }
+        });
+    }
+});

@@ -541,3 +541,66 @@ body {
     text-shadow: 0 0 10px rgba(180, 150, 255, 0.8), 0 0 20px rgba(180, 150, 255, 0.5);
 }
 
+
+/* --- MUSIC PLAYER --- */
+.music-toggle {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    z-index: 10000;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(180, 150, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(180, 150, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #b496ff;
+}
+
+.music-toggle:hover {
+    background: rgba(180, 150, 255, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(180, 150, 255, 0.5);
+}
+
+.music-toggle svg {
+    transition: all 0.3s ease;
+}
+
+
+/* --- MUSIC PLAYER --- */
+.music-toggle {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    z-index: 10000;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(180, 150, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(180, 150, 255, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #b496ff;
+}
+
+.music-toggle:hover {
+    background: rgba(180, 150, 255, 0.3);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(180, 150, 255, 0.5);
+}
+
+.music-toggle svg {
+    transition: all 0.3s ease;
+}
