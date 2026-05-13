@@ -73,7 +73,7 @@ function getTextCoordinates() {
     
     // 基础排版
     let fontSize = Math.min(width * 0.08, 150); // 根据屏幕响应式调整字体
-    offCtx.font = \900 \px Montserrat, sans-serif\;
+    offCtx.font = "900 " + fontSize + "px Montserrat, sans-serif"
     offCtx.fillStyle = 'white';
     offCtx.textAlign = 'center';
     offCtx.textBaseline = 'middle';
@@ -131,7 +131,7 @@ class Particle {
         const bColor = 220 + Math.random() * 35; 
         const alpha = 0.6 + Math.random() * 0.4; 
         
-        this.color = \gba(\, \, \, \)\;
+        this.color = 'rgba(' + rColor + ',' + gColor + ',' + bColor + ',' + alpha + ')';
         
         this.vx = 0;
         this.vy = 0;
@@ -258,3 +258,4 @@ window.addEventListener('scroll', () => {
         navbar.style.backdropFilter = 'none';
     }
 });
+
