@@ -170,10 +170,11 @@ body {
     white-space: nowrap;
     font-size: 8rem;
     font-weight: 900;
-    color: rgba(180, 150, 255, 0.06);
+    color: rgba(180, 150, 255, 0.25);
     text-transform: uppercase;
     letter-spacing: -2px;
     animation: marquee-scroll 40s linear infinite;
+    text-shadow: 0 0 30px rgba(180, 150, 255, 0.4);
 }
 
 @keyframes marquee-scroll {
