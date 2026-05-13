@@ -349,3 +349,57 @@ body {
     margin: 0;
 }
 
+
+/* NEW SECTION ARCHITECTURE */
+.main-section-title {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 60px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.sub-category-header {
+    color: #b496ff;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    margin-top: 80px;
+    letter-spacing: 2px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(180, 150, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.placeholder-text {
+    color: #666;
+    font-style: italic;
+    padding: 20px 0;
+}
+
+.honors-section, .skills-section {
+    padding: 100px 10%;
+    position: relative;
+    z-index: 2;
+}
+
+.honors-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.honor-item {
+    background: rgba(25, 20, 30, 0.4);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.honor-year {
+    color: #b496ff;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
