@@ -18,7 +18,7 @@ body {
 }
 
 /* 粒子背景画布 */
-#particleCanvas {
+#visualizerCanvas {
     position: fixed; /* 固定在背景不随页面滚动 */
     top: 0;
     left: 0;
