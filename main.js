@@ -39,7 +39,7 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// --- AUDIO VISUALIZER LOGIC (Replaces Particles) ---
+// --- AUDIO VISUALIZER LOGIC (Symmetrical Smoke/Fluid) ---
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('visualizerCanvas');
     if(!canvas) return;
@@ -69,9 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isInitialized) return;
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256; 
+        analyser.fftSize = 512; 
         
-        // Connect taking care of potential CORS issues locally
         const source = audioContext.createMediaElementSource(bgMusic);
         source.connect(analyser);
         analyser.connect(audioContext.destination);
@@ -93,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 bgMusic.play();
                 iconOff.style.display = 'none';
                 iconOn.style.display = 'block';
-                drawVisualizer(); // start loop
+                drawVisualizer(); 
             } else {
                 bgMusic.pause();
                 iconOff.style.display = 'block';
@@ -102,80 +101,134 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    class Particle {
+        constructor(x, y, vx, vy, life, color, size) {
+            this.x = x;
+            this.y = y;
+            this.vx = vx;
+            this.vy = vy;
+            this.life = life;
+            this.maxLife = life;
+            this.color = color;
+            this.size = size;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life--;
+            this.vx *= 0.98; // friction
+            this.vy -= 0.05; // float upwards
+        }
+        draw(ctx, centerX) {
+            const alpha = Math.max(0, this.life / this.maxLife);
+            ctx.fillStyle = this.color.replace('ALPHA', alpha);
+            
+            // Draw Right
+            ctx.beginPath();
+            ctx.arc(centerX + this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw Left (Symmetrical)
+            ctx.beginPath();
+            ctx.arc(centerX - this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    let particles = [];
+    let time = 0;
+
     function drawVisualizer() {
-        if(bgMusic.paused) return; // Stop drawing if paused
+        if(bgMusic.paused) return; 
         requestAnimationFrame(drawVisualizer);
 
         if(analyser) analyser.getByteFrequencyData(dataArray);
 
-        ctx.clearRect(0, 0, width, height);
+        // Fade background to create smoke trails
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = 'rgba(5, 5, 5, 0.12)';
+        ctx.fillRect(0, 0, width, height);
 
-        // Center on the right side of the screen
-        const centerX = width >= 1000 ? width * 0.8 : width * 0.5;
-        const centerY = height * 0.5;
-        const baseRadius = width < 800 ? 100 : 180;
+        ctx.globalCompositeOperation = 'lighter';
         
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        
-        const bars = analyser ? analyser.frequencyBinCount : 128;
-        const angleStep = (Math.PI * 2) / bars;
+        const centerX = width >= 1000 ? width * 0.75 : width * 0.5;
+        const centerY = height * 0.6; // slightly below center
 
-        for (let i = 0; i < bars; i++) {
-            const amplitude = analyser ? dataArray[i] : 0;
-            const barHeight = (amplitude / 255) * 200; 
-            
-            const angle = i * angleStep;
+        time += 0.02;
+        let bass = 0;
+        let mid = 0;
+        let high = 0;
 
-            const x0 = Math.cos(angle) * baseRadius;
-            const y0 = Math.sin(angle) * baseRadius;
-            
-            const x1 = Math.cos(angle) * (baseRadius + barHeight + 5);
-            const y1 = Math.sin(angle) * (baseRadius + barHeight + 5);
-
-            ctx.beginPath();
-            ctx.moveTo(x0, y0);
-            ctx.lineTo(x1, y1);
-            
-            if(i % 2 === 0) {
-                ctx.strokeStyle = `rgba(180, 150, 255, ${0.4 + (amplitude/255)*0.6})`;
-                ctx.shadowColor = 'rgba(180, 150, 255, 0.8)';
-            } else {
-                ctx.strokeStyle = `rgba(138, 43, 226, ${0.4 + (amplitude/255)*0.6})`;
-                ctx.shadowColor = 'rgba(138, 43, 226, 0.8)';
-            }
-            
-            ctx.lineWidth = 4;
-            ctx.shadowBlur = 10;
-            ctx.stroke();
-            
-            if (amplitude > 200 && Math.random() > 0.8) {
-                ctx.beginPath();
-                ctx.arc(x1 + Math.cos(angle)*15, y1 + Math.sin(angle)*15, Math.random()*3, 0, Math.PI*2);
-                ctx.fillStyle = '#fff';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = 'white';
-                ctx.fill();
-            }
+        if (analyser) {
+            for(let i=0; i<10; i++) bass += dataArray[i];
+            for(let i=10; i<50; i++) mid += dataArray[i];
+            for(let i=50; i<150; i++) high += dataArray[i];
+            bass /= 10;
+            mid /= 40;
+            high /= 100;
         }
 
-        let avgAmplitude = 0;
-        if(analyser) {
-            for(let i=0; i<bars; i++) avgAmplitude += dataArray[i];
-            avgAmplitude /= bars;
+        // Spawn particles based on frequencies
+        const spawnCount = Math.floor(bass / 30);
+        for(let i=0; i<spawnCount; i++) {
+            let px = Math.sin(time + Math.random()) * (50 + mid); // wandering base
+            let py = centerY + Math.random() * 20 - 10;
+            
+            let vx = Math.cos(time*2 + Math.random()*2) * (2 + bass/100) + mid/50;
+            let vy = -Math.random() * 3 - bass/50;
+            
+            // Purple to white gradient
+            let r = Math.floor(180 + high);
+            let g = Math.floor(150 + high);
+            let b = 255;
+            let color = "rgba($({r}), $({g}), $({b}), ALPHA)";
+            
+            let size = Math.random() * 3 + 1 + (bass/100);
+            
+            particles.push(new Particle(px, py, vx, vy, 100 + Math.random()*50, color, size));
         }
 
+        // Update and draw particles
+        for(let i=particles.length-1; i>=0; i--) {
+            let p = particles[i];
+            p.update();
+            p.draw(ctx, centerX);
+            if(p.life <= 0 || p.y < 0) {
+                particles.splice(i, 1);
+            }
+        }
+        
+        // Draw some connecting wave lines for that "fluid" membrane look
+        ctx.lineWidth = 2;
+        ctx.lineJoin = 'round';
         ctx.beginPath();
-        ctx.arc(0, 0, baseRadius - 10 + (avgAmplitude / 255) * 30, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(20, 10, 30, ${0.8 + (avgAmplitude/255)*0.2})`;
-        ctx.strokeStyle = `rgba(180, 150, 255, ${0.5 + (avgAmplitude/255)*0.5})`;
-        ctx.lineWidth = 4;
-        ctx.shadowBlur = 20 + (avgAmplitude / 255) * 50;
-        ctx.shadowColor = '#6a4c9c';
-        ctx.fill();
+        for(let i=0; i<30; i++) {
+            let amp = analyser ? dataArray[i*2] : 0;
+            let lx = i * 15 + Math.sin(time + i*0.1) * 20;
+            let ly = centerY - amp * 2 - Math.cos(time + i*0.2) * 50;
+            
+            if(i===0) {
+                ctx.moveTo(centerX + lx, ly);
+            } else {
+                ctx.lineTo(centerX + lx, ly);
+            }
+        }
+        ctx.strokeStyle = '`rgba(180, 150, 255, 0.2)`';
         ctx.stroke();
 
-        ctx.restore();
+        ctx.beginPath();
+        for(let i=0; i<30; i++) {
+            let amp = analyser ? dataArray[i*2] : 0;
+            let lx = i * 15 + Math.sin(time + i*0.1) * 20;
+            let ly = centerY - amp * 2 - Math.cos(time + i*0.2) * 50;
+            
+            if(i===0) {
+                ctx.moveTo(centerX - lx, ly);
+            } else {
+                ctx.lineTo(centerX - lx, ly);
+            }
+        }
+        ctx.stroke();
     }
 });
 
