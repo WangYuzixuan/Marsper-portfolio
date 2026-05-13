@@ -414,3 +414,50 @@ body {
     margin-bottom: 10px;
 }
 
+
+/* PARTICLE HINT BOX */
+.hero-right-hint {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 10;
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+.hint-glass {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: 15px;
+    padding: 20px 40px;
+    color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(180, 150, 255, 0.2);
+    border-radius: 15px;
+    background: rgba(25, 20, 30, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(180, 150, 255, 0.05);
+    transition: all 0.5s ease;
+}
+
+.hint-text {
+    font-size: 0.8rem;
+    color: rgba(180, 150, 255, 0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: opacity 0.5s ease;
+}
+
+/* Hover state on the prompt itself to hide it when particles form */
+.hero-right-hint:hover .hint-glass {
+    opacity: 0;
+    transform: scale(0.9);
+}
+.hero-right-hint:hover .hint-text {
+    opacity: 0;
+}
+
