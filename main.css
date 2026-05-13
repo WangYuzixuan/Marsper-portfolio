@@ -1,0 +1,252 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth; /* 单页丝滑滚动锚点 */
+}
+
+body {
+    background-color: #050505;
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh; /* 允许页面向下延展 */
+    position: relative;
+}
+
+/* 粒子背景画布 */
+#particleCanvas {
+    position: fixed; /* 固定在背景不随页面滚动 */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* 置于底层 */
+    pointer-events: none; /* 防止阻挡前面的点击交互 */
+    filter: blur(1px); /* 极弱模糊，保留强颗粒感的同时边缘微光 */
+    opacity: 0.9;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 60px;
+    z-index: 100;
+    transition: background 0.3s, backdrop-filter 0.3s;
+}
+
+.logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #888;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #fff;
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 100vh;
+    padding: 0 80px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none; /* 让鼠标事件能够穿透给JS处理粒子交互 */
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    pointer-events: auto; /* 恢复对自身的鼠标事件 */
+}
+
+.hero-title {
+    font-size: clamp(5rem, 9vw, 9rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -2px;
+}
+
+/* 名字的悬停变紫效果 */
+.name-group {
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    cursor: default;
+}
+
+.name-group:hover {
+    color: #b496ff;
+    text-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+}
+
+/* Tags at the bottom */
+.tags {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.tag {
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.05); /* 提高透明度，和背景区分开 */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* 亮一点的边框 */
+    color: #fff; /* 文字变白更清晰 */
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* 按钮的悬停相反色效果 */
+.tag:hover {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+/* ��������ȫ�־۹��Ч�� */
+.cursor-spotlight {
+    position: fixed;
+    top: -500px;
+    left: -500px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%);
+    border-radius: 50%;
+    pointer-events: none; /* ��͸��� */
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    transition: width 0.3s, height 0.3s, background 0.3s;
+}
+
+/* ----- WORKS SECTION (01) ----- */
+.works-section {
+    position: relative;
+    padding: 100px 80px;
+    min-height: 100vh;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.marquee-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200%;
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.02);
+    white-space: nowrap;
+    z-index: -1;
+    user-select: none;
+    text-transform: uppercase;
+    letter-spacing: -5px;
+}
+
+.section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.section-label {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* 项目卡片 */
+.project-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 15, 15, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 60px;
+    transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(180, 150, 255, 0.3);
+    background: rgba(25, 20, 30, 0.8);
+}
+
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+
+.project-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.project-tags {
+    font-size: 0.85rem;
+    color: #888;
+    letter-spacing: 2px;
+}
+
+.project-award {
+    font-size: 0.85rem;
+    color: #e6c56b; /* 暗金色 */
+    margin-top: 40px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.project-image {
+    width: 320px;
+    height: 400px;
+    background: #111;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #444;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
