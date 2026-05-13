@@ -258,18 +258,3 @@ window.addEventListener('scroll', () => {
         navbar.style.backdropFilter = 'none';
     }
 });
-
-
-// --- PRELOADER LOGIC ---
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const preloader = document.getElementById('preloader');
-        if (preloader) {
-            preloader.classList.add('fade-out');
-            setTimeout(() => {
-                preloader.style.display = 'none';
-            }, 1000);
-        }
-    }, 2500); // Wait for the loading animation to finish (2.5 seconds)
-});
-
