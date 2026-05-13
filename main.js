@@ -1,7 +1,4 @@
-const canvas = document.getElementById('particleCanvas');
-const ctx = canvas.getContext('2d');
-
-// --------------- Êó±ê¾Û¹âµÆ½»»¥ ---------------
+ï»¿// --------------- é¼ æ ‡èšå…‰ç¯äº¤äº’ ---------------
 const cursor = document.querySelector('.cursor-spotlight');
 
 document.addEventListener('mousemove', (e) => {
@@ -30,224 +27,7 @@ interactiveElements.forEach(el => {
     });
 });
 
-let width, height;
-let particles = [];
-let mouse = { x: -1000, y: -1000, radius: 120 }; // °ÑÅÅ³â°ë¾¶ÉÔÎ¢¸ÄĞ¡Ò»µã
-let isHoveringHint = false;
-
-// »ñÈ¡´¥·¢¿ò
-const particleTrigger = document.getElementById('particleTrigger');
-if (particleTrigger) {
-    particleTrigger.addEventListener('mouseenter', () => {
-        isHoveringHint = true;
-    });
-    particleTrigger.addEventListener('mouseleave', () => {
-        isHoveringHint = false;
-    });
-}
-
-function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    initParticles();
-}
-
-window.addEventListener('resize', resize);
-window.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-});
-window.addEventListener('mouseout', () => {
-    mouse.x = -1000;
-    mouse.y = -1000;
-});
-
-// ½âÎöÎÄ±¾ÏñËØµÄº¯Êı
-function getTextCoordinates() {
-    let offCanvas = document.createElement('canvas');
-    let offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
-    offCanvas.width = width;
-    offCanvas.height = height;
-    
-    // »ù´¡ÅÅ°æ
-    let fontSize = Math.min(width * 0.08, 150); // ¸ù¾İÆÁÄ»ÏìÓ¦Ê½µ÷Õû×ÖÌå
-    offCtx.font = "900 " + fontSize + "px Montserrat, sans-serif"
-    offCtx.fillStyle = 'white';
-    offCtx.textAlign = 'center';
-    offCtx.textBaseline = 'middle';
-    
-    // äÖÈ¾ÔÚÓÒ²à
-    let txtX = width >= 1000 ? width * 0.85 : width * 0.8;
-    let txtY = height * 0.5;
-    
-    // ÎªÁËÈÃ×ÖÄ¸Á¢ÆğÀ´¸üÓĞ¸Ğ¾õ£¬ÎÒÃÇ¿ÉÒÔ¼ÓÒ»µãĞı×ª£¬»òÕßÖ±½Óºá·Å
-    offCtx.translate(txtX, txtY);
-    offCtx.rotate(Math.PI / 2); // ±ä³É´¹Ö±ÎÄ×ÖÅÅÔÚÓÒ±ß£¬·Ç³£¼«¿Í
-    offCtx.fillText('MARSPER', 0, 0);
-    offCtx.setTransform(1, 0, 0, 1, 0, 0); // reset
-    
-    let pixels = offCtx.getImageData(0, 0, width, height).data;
-    let coords = [];
-    
-    // ²½³¤Ô½´ó£¬µãÔ½Ï¡Êè
-    for (let y = 0; y < height; y += 4) {
-        for (let x = 0; x < width; x += 4) {
-            let alpha = pixels[(y * width + x) * 4 + 3];
-            if (alpha > 128) {
-                coords.push({ x: x, y: y });
-            }
-        }
-    }
-    return coords;
-}
-
-class Particle {
-    constructor(textCoord) {
-        // --- ÇòÌå»ù´¡ĞÎÌ¬ ---
-        let angle = Math.random() * Math.PI * 2;
-        let r = Math.random() * 250; 
-        
-        this.baseOffsetX = Math.cos(angle) * r;
-        this.baseOffsetY = Math.sin(angle) * r;
-        
-        // ·ÖÅäÎÄ×ÖÄ¿±ê×ø±ê
-        this.textTargetX = textCoord.x;
-        this.textTargetY = textCoord.y;
-        
-        // ³õÊ¼Éú³ÉÔÚÇòÌå
-        this.sphereCenterX = width * 0.85;
-        this.sphereCenterY = height * 0.5;
-        
-        this.x = this.sphereCenterX + this.baseOffsetX;
-        this.y = this.sphereCenterY + this.baseOffsetY;
-        
-        this.size = Math.random() * 2 + 1; 
-        
-        // Èü²©×Ï¹âÅäÉ«
-        const rColor = 120 + Math.random() * 60; 
-        const gColor = 50 + Math.random() * 80;  
-        const bColor = 220 + Math.random() * 35; 
-        const alpha = 0.6 + Math.random() * 0.4; 
-        
-        this.color = 'rgba(' + rColor + ',' + gColor + ',' + bColor + ',' + alpha + ')';
-        
-        this.vx = 0;
-        this.vy = 0;
-        this.randomOffset = Math.random() * 100;
-        // ÎÄ×ÖºôÎüĞ§¹ûµÄÆ«ÒÆÏµÊı
-        this.textFloatSpeed = 0.02 + Math.random() * 0.03;
-        this.textFloatAmp = Math.random() * 15;
-    }
-
-    update(time) {
-        // ¸üĞÂÊÓ¿Ú¸Ä±äÊ±µÄÖĞĞÄµã
-        this.sphereCenterX = width >= 1000 ? width * 0.85 : width * 0.9;
-        this.sphereCenterY = height * 0.5;
-
-        // ¡¾ºôÎüĞ§¹û¡¿ÇòÌåËõ·ÅÕñ·ù (scale)
-        let scale = 1 + 0.1 * Math.sin(time * 0.0015 + this.randomOffset);
-        
-        let targetX, targetY;
-        
-        if (isHoveringHint) {
-            // µ±Êó±êĞüÍ£Ê±£¬Ä¿±ê±ä³ÉÎÄ×Ö×ø±ê£¬´øÓĞÇáÎ¢µÄÁ÷¶¯ºôÎü¸Ğ
-            let floatY = Math.sin(time * this.textFloatSpeed + this.randomOffset) * this.textFloatAmp;
-            let floatX = Math.cos(time * this.textFloatSpeed + this.randomOffset) * (this.textFloatAmp / 2);
-            targetX = this.textTargetX + floatX;
-            targetY = this.textTargetY + floatY;
-        } else {
-            // ·ñÔò£¬Ä¿±ê¾ÍÊÇºôÎüÖĞµÄÇòÌå
-            targetX = this.sphereCenterX + this.baseOffsetX * scale;
-            targetY = this.sphereCenterY + this.baseOffsetY * scale;
-        }
-
-        // ¡¾Êó±êÅö×²É¢¿ªĞ§¹û¡¿
-        let dx = this.x - mouse.x;
-        let dy = this.y - mouse.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        
-        if (dist < mouse.radius) {
-            let force = (mouse.radius - dist) / mouse.radius;
-            let angle = Math.atan2(dy, dx);
-            let pushForce = force * 6; // ±»Êó±êÍÆ¿ªµÄÁ¦¶È
-            this.vx += Math.cos(angle) * pushForce;
-            this.vy += Math.sin(angle) * pushForce;
-        }
-
-        // ÒıÁ¦£¨µ¯»ÉÁ¦£©£ºÀ­»ØÄ¿±êÎ»ÖÃ¡£¿ÉÒÔµ÷ÕûÄ¦²ÁÁ¦ºÍÒıÁ¦ÊµÏÖË¿»¬±äĞÎ
-        let txDistX = targetX - this.x;
-        let txDistY = targetY - this.y;
-        this.vx += txDistX * 0.08; 
-        this.vy += txDistY * 0.08;
-
-        // Ä¦²ÁÁ¦£ºÂıÂıÍ£Ö¹
-        this.vx *= 0.80;
-        this.vy *= 0.80;
-
-        this.x += this.vx;
-        this.y += this.vy;
-    }
-
-    draw() {
-        ctx.fillStyle = this.color;
-        
-        if (this.size > 1.2 && isHoveringHint) {
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = this.color;
-        } else if (this.size > 1.8) {
-            ctx.shadowBlur = 5;
-            ctx.shadowColor = this.color;
-        } else {
-            ctx.shadowBlur = 0;
-        }
-        
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-function initParticles() {
-    particles = [];
-    
-    // ÌáÈ¡ÎÄ×Ö×ø±ê£¬Éú³ÉÓ³Éä
-    let textCoords = getTextCoordinates();
-    
-    // Èç¹ûÃ»ÓĞ²Éµ½×ø±ê£¨·À±¨´í£©£¬¸øÒ»¸öËæ»úÊı×é
-    if (textCoords.length === 0) {
-        textCoords = [{x: width*0.85, y: height*0.5}];
-    }
-
-    // ¸ù¾İÏñËØµãµÄÊıÁ¿Éú³ÉÁ£×Ó£¬¾¡Á¿¸´ÓÃ»òÕß´òÂÒÒÔ»ñµÃ¸üºÃĞ§¹û
-    // ÎÒÃÇÏŞÖÆÒ»ÏÂ×î´óÁ£×ÓÊı£¬²¢ÔÚÊı×éÀïËæ»ú³éÑù·ÖÅä
-    let maxParticles = 3000;
-    let actualCount = Math.min(textCoords.length, maxParticles);
-    
-    // ´òÂÒ×ø±êÊı×é£¬ÈÃÁ£×ÓËæ»ú·ÉÏò¸÷¸öÎ»ÖÃ
-    textCoords.sort(() => Math.random() - 0.5);
-
-    for (let i = 0; i < actualCount; i++) {
-        // Èç¹ûÏë±£Áô´óÁ¿Á£×Ó£¬µ«ÎÄ×Ö×ø±ê²»¹»£¬¿ÉÒÔÓÃÈ¡Ä£Ñ­»··ÖÅä
-        let coord = textCoords[i % textCoords.length];
-        particles.push(new Particle(coord));
-    }
-}
-
-function animate(time) {
-    ctx.clearRect(0, 0, width, height); 
-    for (let p of particles) {
-        p.update(time);
-        p.draw();
-    }
-    requestAnimationFrame(animate);
-}
-
-resize();
-requestAnimationFrame(animate);
-
-// µ¼º½À¸¹ö¶¯Ä£ºı±³¾°Ğ§¹û
+// å¯¼èˆªæ æ»šåŠ¨æ¨¡ç³ŠèƒŒæ™¯æ•ˆæœ
 const navbar = document.querySelector('.navbar');
 window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
@@ -259,13 +39,152 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// --- AUDIO VISUALIZER LOGIC (Replaces Particles) ---
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('visualizerCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    window.addEventListener('resize', () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    });
+
+    const bgMusic = document.getElementById('bg-music');
+    const musicToggle = document.getElementById('music-toggle');
+    const iconOn = document.querySelector('.music-icon-on');
+    const iconOff = document.querySelector('.music-icon-off');
+
+    let audioContext, analyser, dataArray;
+    let isInitialized = false;
+
+    function initAudio() {
+        if (isInitialized) return;
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256; 
+        
+        // Connect taking care of potential CORS issues locally
+        const source = audioContext.createMediaElementSource(bgMusic);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        isInitialized = true;
+    }
+
+    if (bgMusic && musicToggle) {
+        musicToggle.addEventListener('click', () => {
+            if (!isInitialized) {
+                initAudio();
+            }
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+
+            if (bgMusic.paused) {
+                bgMusic.play();
+                iconOff.style.display = 'none';
+                iconOn.style.display = 'block';
+                drawVisualizer(); // start loop
+            } else {
+                bgMusic.pause();
+                iconOff.style.display = 'block';
+                iconOn.style.display = 'none';
+            }
+        });
+    }
+
+    function drawVisualizer() {
+        if(bgMusic.paused) return; // Stop drawing if paused
+        requestAnimationFrame(drawVisualizer);
+
+        if(analyser) analyser.getByteFrequencyData(dataArray);
+
+        ctx.clearRect(0, 0, width, height);
+
+        // Center on the right side of the screen
+        const centerX = width >= 1000 ? width * 0.8 : width * 0.5;
+        const centerY = height * 0.5;
+        const baseRadius = width < 800 ? 100 : 180;
+        
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        
+        const bars = analyser ? analyser.frequencyBinCount : 128;
+        const angleStep = (Math.PI * 2) / bars;
+
+        for (let i = 0; i < bars; i++) {
+            const amplitude = analyser ? dataArray[i] : 0;
+            const barHeight = (amplitude / 255) * 200; 
+            
+            const angle = i * angleStep;
+
+            const x0 = Math.cos(angle) * baseRadius;
+            const y0 = Math.sin(angle) * baseRadius;
+            
+            const x1 = Math.cos(angle) * (baseRadius + barHeight + 5);
+            const y1 = Math.sin(angle) * (baseRadius + barHeight + 5);
+
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            
+            if(i % 2 === 0) {
+                ctx.strokeStyle = `rgba(180, 150, 255, ${0.4 + (amplitude/255)*0.6})`;
+                ctx.shadowColor = 'rgba(180, 150, 255, 0.8)';
+            } else {
+                ctx.strokeStyle = `rgba(138, 43, 226, ${0.4 + (amplitude/255)*0.6})`;
+                ctx.shadowColor = 'rgba(138, 43, 226, 0.8)';
+            }
+            
+            ctx.lineWidth = 4;
+            ctx.shadowBlur = 10;
+            ctx.stroke();
+            
+            if (amplitude > 200 && Math.random() > 0.8) {
+                ctx.beginPath();
+                ctx.arc(x1 + Math.cos(angle)*15, y1 + Math.sin(angle)*15, Math.random()*3, 0, Math.PI*2);
+                ctx.fillStyle = '#fff';
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = 'white';
+                ctx.fill();
+            }
+        }
+
+        let avgAmplitude = 0;
+        if(analyser) {
+            for(let i=0; i<bars; i++) avgAmplitude += dataArray[i];
+            avgAmplitude /= bars;
+        }
+
+        ctx.beginPath();
+        ctx.arc(0, 0, baseRadius - 10 + (avgAmplitude / 255) * 30, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(20, 10, 30, ${0.8 + (avgAmplitude/255)*0.2})`;
+        ctx.strokeStyle = `rgba(180, 150, 255, ${0.5 + (avgAmplitude/255)*0.5})`;
+        ctx.lineWidth = 4;
+        ctx.shadowBlur = 20 + (avgAmplitude / 255) * 50;
+        ctx.shadowColor = '#6a4c9c';
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+    }
+});
+
 // --- REINSTATED PRELOADER LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
     const loaderCanvas = document.getElementById('matrixCanvas');
     if(!loaderCanvas) return;
     const lctx = loaderCanvas.getContext('2d');
     
-    // Independent width/height setup
     let cw = window.innerWidth;
     let ch = window.innerHeight;
     loaderCanvas.width = cw;
@@ -323,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     clearInterval(matrixInterval);
                     wrapper.style.display = 'none';
-                    // Re-trigger global resize to ensure background particle canvas resets properly
                     window.dispatchEvent(new Event('resize')); 
                 }, 1000);
             }, 800);
@@ -339,24 +257,3 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateProgress, 500);
 });
 
-// --- MUSIC PLAYER LOGIC ---
-document.addEventListener('DOMContentLoaded', () => {
-    const bgMusic = document.getElementById('bg-music');
-    const musicToggle = document.getElementById('music-toggle');
-    const iconOn = document.querySelector('.music-icon-on');
-    const iconOff = document.querySelector('.music-icon-off');
-
-    if (bgMusic && musicToggle) {
-        musicToggle.addEventListener('click', () => {
-            if (bgMusic.paused) {
-                bgMusic.play();
-                iconOff.style.display = 'none';
-                iconOn.style.display = 'block';
-            } else {
-                bgMusic.pause();
-                iconOff.style.display = 'block';
-                iconOn.style.display = 'none';
-            }
-        });
-    }
-});
