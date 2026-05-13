@@ -155,20 +155,31 @@ body {
     overflow: hidden;
 }
 
-.marquee-bg {
+.marquee-wrapper {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200%;
-    font-size: 15rem;
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.02);
-    white-space: nowrap;
-    z-index: -1;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    z-index: 0;
     user-select: none;
+    pointer-events: none;
+}
+
+.marquee-bg {
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 8rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03);
     text-transform: uppercase;
-    letter-spacing: -5px;
+    letter-spacing: -2px;
+    animation: marquee-scroll 40s linear infinite;
+}
+
+@keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .section-inner {
