@@ -545,11 +545,11 @@ body {
 /* --- MUSIC PLAYER --- */
 .music-toggle {
     position: fixed;
-    top: 30px;
+    top: 100px;
     right: 40px;
     z-index: 10000;
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     background: rgba(180, 150, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -577,11 +577,11 @@ body {
 /* --- MUSIC PLAYER --- */
 .music-toggle {
     position: fixed;
-    top: 30px;
+    top: 100px;
     right: 40px;
     z-index: 10000;
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     background: rgba(180, 150, 255, 0.1);
     backdrop-filter: blur(10px);
