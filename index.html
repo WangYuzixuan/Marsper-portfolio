@@ -1,23 +1,169 @@
-<!DOCTYPE html>
-<html lang="zh">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Loading</title>
-    <link rel="stylesheet" href="loader.css">
+    <title>Marsper Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <canvas id="matrixCanvas"></canvas>
-    <div class="loading-container">
-        <div class="percentage_wrapper">
-            <span id="percentage">0</span><span class="percent-sign">%</span>
+    <!-- --- REINSTATED PRELOADER --- -->
+    <div id="preloader-wrapper">
+        <canvas id="matrixCanvas"></canvas>
+        <div class="loading-container">
+            <div class="percentage_wrapper">
+                <span id="percentage">0</span><span class="percent-sign">%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="loading-text">Welcome to <span class="highlight">Marsper</span>'s world of design</div>
         </div>
-        <div class="progress-bar-container">
-            <div id="progress-bar"></div>
-        </div>
-        <div class="loading-text">Welcome to <span class="highlight">Marsper</span>'s world of design</div>
     </div>
-    <script src="loader.js"></script>
+    <!-- 榧犳爣鑱氬厜鐏?-->
+    <div class="cursor-spotlight"></div>
+
+    <!-- 绮掑瓙鐗规晥鐢诲竷 -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">MARSPER.</div>
+        <ul class="nav-links">
+            <li><a href="#works">WORKS</a></li>
+            <li><a href="#experience">EXPERIENCE</a></li>
+            <li><a href="#honors">HONORS</a></li>
+            <li><a href="#skills">SKILLS</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Visual Section -->
+    <main class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <div>HELLO</div>
+                <div>I'M</div>
+                <div class="name-group">
+                    <div>WANG</div>
+                    <div>YUZIXUAN</div>
+                </div>
+            </h1>
+            <div class="tags">
+                <div class="tag">UI/UX DESIGN</div>
+                <div class="tag">MODELING</div>
+                <div class="tag">EXTRA SKILLS</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 宸ㄥぇ缈绘粴澶у瓧鍒嗛殧甯?-->
+    <div class="marquee-wrapper">
+        <div class="marquee-bg">
+            <span>WELCOME TO MARSPER'S WORLD 鈥?WELCOME TO MARSPER'S WORLD 鈥?</span>
+            <span>WELCOME TO MARSPER'S WORLD 鈥?WELCOME TO MARSPER'S WORLD 鈥?</span>
+        </div>
+    </div>
+
+    <!-- WORKS SECTION (01) -->
+    <section id="works" class="works-section">
+        
+        <div class="section-inner">
+            <div class="main-section-title" style="margin-bottom: 10px;">鈼?01 WORKS</div>
+            
+            <!-- 瀛愭澘鍧楋細UI/UX DESIGN -->
+            <div class="sub-category-header" style="margin-top: 0;">鉁?UI/UX DESIGN</div>
+            
+            <!-- 绗竴涓綔鍝佸崱鐗囷細CHRONIC KILLER -->
+            <div class="project-card">
+                <div class="project-info">
+                    <h2 class="project-title">CHRONIC KILLER</h2>
+                    <div class="project-tags">Service & Product design</div>
+                    <a href="chronic-killer-detail.html" class="view-case-btn">VIEW CASE DETAILS <span>鈫?/span></a>
+                </div>
+                <div class="project-image">
+                    <img src="Killer2.png" alt="CHRONIC KILLER" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+
+            <!-- 绗簩涓綔鍝佸崱鐗囷細LATE-NIGHT MEDIA KILLER -->
+            <div class="project-card">
+                <div class="project-info">
+                    <h2 class="project-title">LATE-NIGHT MEDIA KILLER</h2>
+                    <div class="project-tags">interaction & Product Design</div>
+                    <a href="late-night-detail.html" class="view-case-btn">VIEW CASE DETAILS <span>鈫?/span></a>
+                </div>
+                <div class="project-image">
+                    <img src="killer.jpg" alt="LATE-NIGHT MEDIA KILLER" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+
+            <!-- 瀛愭澘鍧楋細MODELING -->
+            <div class="sub-category-header">鉁?3D MODELING</div>
+            <div class="placeholder-text">[ 3D Modeling works coming soon... ]</div>
+
+            <!-- 瀛愭澘鍧楋細EXTRA SKILLS -->
+            <div class="sub-category-header">鉁?EXTRA SKILLS</div>
+            <div class="placeholder-text">[ Extra skills works coming soon... ]</div>
+
+        </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION (02) -->
+    <section id="experience" class="experience-section">
+        <div class="section-inner">
+            <div class="main-section-title">鈼?02 EXPERIENCE</div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2024.01 - PRESENT</div>
+                    <div class="timeline-content">
+                        <h3>Product Designer</h3>
+                        <p class="timeline-company">Company Name / Studio</p>
+                        <p class="timeline-desc">Responsible for UI/UX design, user research, and creating interactive prototypes. Collaborated with developers to ensure high-quality design implementation.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2022.09 - 2023.12</div>
+                    <div class="timeline-content">
+                        <h3>UI/UX Design Intern</h3>
+                        <p class="timeline-company">Previous Company</p>
+                        <p class="timeline-desc">Assisted in wireframing, usability testing, and designing micro-interactions for web and mobile platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HONORS SECTION (03) -->
+    <section id="honors" class="honors-section">
+        <div class="section-inner">
+            <div class="main-section-title">鈼?03 HONORS & AWARDS</div>
+            <div class="honors-list">
+                <div class="honor-item">
+                    <div class="honor-year">2024</div>
+                    <h3 style="margin: 0; color: #fff;">National Design Award</h3>
+                    <p style="color: #999; font-size: 0.9rem;">First Prize in UI/UX Track</p>
+                </div>
+                <div class="honor-item">
+                    <div class="honor-year">2023</div>
+                    <h3 style="margin: 0; color: #fff;">Creative Excellence</h3>
+                    <p style="color: #999; font-size: 0.9rem;">Best Interaction Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS SECTION (04) -->
+    <section id="skills" class="skills-section">
+        <div class="section-inner">
+            <div class="main-section-title">鈼?04 SKILLS</div>
+            <div class="placeholder-text">[ Skills visualization coming soon... ]</div>
+        </div>
+    </section>
+
+    <script src="main.js"></script>
 </body>
 </html>

@@ -258,3 +258,83 @@ window.addEventListener('scroll', () => {
         navbar.style.backdropFilter = 'none';
     }
 });
+
+// --- REINSTATED PRELOADER LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const loaderCanvas = document.getElementById('matrixCanvas');
+    if(!loaderCanvas) return;
+    const lctx = loaderCanvas.getContext('2d');
+    
+    // Independent width/height setup
+    let cw = window.innerWidth;
+    let ch = window.innerHeight;
+    loaderCanvas.width = cw;
+    loaderCanvas.height = ch;
+
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+    const fontSize = 14;
+    let columns = cw / fontSize;
+    let drops = [];
+    for (let x = 0; x < columns; x++) { drops[x] = 1; }
+
+    function drawMatrix() {
+        lctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+        lctx.fillRect(0, 0, cw, ch);
+        lctx.fillStyle = '#6a4c9c';
+        lctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            lctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > ch && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+    
+    let matrixInterval = setInterval(drawMatrix, 50);
+
+    window.addEventListener('resize', () => {
+        if(!loaderCanvas) return;
+        cw = window.innerWidth;
+        ch = window.innerHeight;
+        loaderCanvas.width = cw;
+        loaderCanvas.height = ch;
+        columns = cw / fontSize;
+        drops = [];
+        for (let x = 0; x < columns; x++) { drops[x] = 1; }
+    });
+
+    let progress = 0;
+    const pEl = document.getElementById('percentage');
+    const pBar = document.getElementById('progress-bar');
+    const wrapper = document.getElementById('preloader-wrapper');
+
+    function updateProgress() {
+        let increment = Math.random() * 2 + 0.5;
+        progress += increment;
+        if (progress >= 100) {
+            progress = 100;
+            pEl.innerText = Math.floor(progress);
+            pBar.style.width = progress + '%';
+            
+            setTimeout(() => {
+                wrapper.style.opacity = '0';
+                setTimeout(() => {
+                    clearInterval(matrixInterval);
+                    wrapper.style.display = 'none';
+                    // Re-trigger global resize to ensure background particle canvas resets properly
+                    window.dispatchEvent(new Event('resize')); 
+                }, 1000);
+            }, 800);
+            return;
+        }
+        
+        pEl.innerText = Math.floor(progress);
+        pBar.style.width = progress + '%';
+        let interval = Math.random() * 150 + 50;
+        setTimeout(updateProgress, interval);
+    }
+    
+    setTimeout(updateProgress, 500);
+});

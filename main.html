@@ -1,17 +1,31 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marsper Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 鼠标聚光灯 -->
+    <!-- --- REINSTATED PRELOADER --- -->
+    <div id="preloader-wrapper">
+        <canvas id="matrixCanvas"></canvas>
+        <div class="loading-container">
+            <div class="percentage_wrapper">
+                <span id="percentage">0</span><span class="percent-sign">%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="loading-text">Welcome to <span class="highlight">Marsper</span>'s world of design</div>
+        </div>
+    </div>
+    <!-- 榧犳爣鑱氬厜鐏?-->
     <div class="cursor-spotlight"></div>
 
-    <!-- 粒子特效画布 -->
+    <!-- 绮掑瓙鐗规晥鐢诲竷 -->
     <canvas id="particleCanvas"></canvas>
 
     <!-- Navigation Bar -->
@@ -44,11 +58,11 @@
         </div>
     </main>
 
-    <!-- 巨大翻滚大字分隔带 -->
+    <!-- 宸ㄥぇ缈绘粴澶у瓧鍒嗛殧甯?-->
     <div class="marquee-wrapper">
         <div class="marquee-bg">
-            <span>WELCOME TO MARSPER'S WORLD — WELCOME TO MARSPER'S WORLD — </span>
-            <span>WELCOME TO MARSPER'S WORLD — WELCOME TO MARSPER'S WORLD — </span>
+            <span>WELCOME TO MARSPER'S WORLD 鈥?WELCOME TO MARSPER'S WORLD 鈥?</span>
+            <span>WELCOME TO MARSPER'S WORLD 鈥?WELCOME TO MARSPER'S WORLD 鈥?</span>
         </div>
     </div>
 
@@ -56,41 +70,41 @@
     <section id="works" class="works-section">
         
         <div class="section-inner">
-            <div class="main-section-title" style="margin-bottom: 10px;">● 01 WORKS</div>
+            <div class="main-section-title" style="margin-bottom: 10px;">鈼?01 WORKS</div>
             
-            <!-- 子板块：UI/UX DESIGN -->
-            <div class="sub-category-header" style="margin-top: 0;">✦ UI/UX DESIGN</div>
+            <!-- 瀛愭澘鍧楋細UI/UX DESIGN -->
+            <div class="sub-category-header" style="margin-top: 0;">鉁?UI/UX DESIGN</div>
             
-            <!-- 第一个作品卡片：CHRONIC KILLER -->
+            <!-- 绗竴涓綔鍝佸崱鐗囷細CHRONIC KILLER -->
             <div class="project-card">
                 <div class="project-info">
                     <h2 class="project-title">CHRONIC KILLER</h2>
                     <div class="project-tags">Service & Product design</div>
-                    <a href="chronic-killer-detail.html" class="view-case-btn">VIEW CASE DETAILS <span>→</span></a>
+                    <a href="chronic-killer-detail.html" class="view-case-btn">VIEW CASE DETAILS <span>鈫?/span></a>
                 </div>
                 <div class="project-image">
                     <img src="Killer2.png" alt="CHRONIC KILLER" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
 
-            <!-- 第二个作品卡片：LATE-NIGHT MEDIA KILLER -->
+            <!-- 绗簩涓綔鍝佸崱鐗囷細LATE-NIGHT MEDIA KILLER -->
             <div class="project-card">
                 <div class="project-info">
                     <h2 class="project-title">LATE-NIGHT MEDIA KILLER</h2>
                     <div class="project-tags">interaction & Product Design</div>
-                    <a href="late-night-detail.html" class="view-case-btn">VIEW CASE DETAILS <span>→</span></a>
+                    <a href="late-night-detail.html" class="view-case-btn">VIEW CASE DETAILS <span>鈫?/span></a>
                 </div>
                 <div class="project-image">
                     <img src="killer.jpg" alt="LATE-NIGHT MEDIA KILLER" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
 
-            <!-- 子板块：MODELING -->
-            <div class="sub-category-header">✦ 3D MODELING</div>
+            <!-- 瀛愭澘鍧楋細MODELING -->
+            <div class="sub-category-header">鉁?3D MODELING</div>
             <div class="placeholder-text">[ 3D Modeling works coming soon... ]</div>
 
-            <!-- 子板块：EXTRA SKILLS -->
-            <div class="sub-category-header">✦ EXTRA SKILLS</div>
+            <!-- 瀛愭澘鍧楋細EXTRA SKILLS -->
+            <div class="sub-category-header">鉁?EXTRA SKILLS</div>
             <div class="placeholder-text">[ Extra skills works coming soon... ]</div>
 
         </div>
@@ -99,7 +113,7 @@
     <!-- EXPERIENCE SECTION (02) -->
     <section id="experience" class="experience-section">
         <div class="section-inner">
-            <div class="main-section-title">● 02 EXPERIENCE</div>
+            <div class="main-section-title">鈼?02 EXPERIENCE</div>
             
             <div class="timeline">
                 <div class="timeline-item">
@@ -126,7 +140,7 @@
     <!-- HONORS SECTION (03) -->
     <section id="honors" class="honors-section">
         <div class="section-inner">
-            <div class="main-section-title">● 03 HONORS & AWARDS</div>
+            <div class="main-section-title">鈼?03 HONORS & AWARDS</div>
             <div class="honors-list">
                 <div class="honor-item">
                     <div class="honor-year">2024</div>
@@ -145,7 +159,7 @@
     <!-- SKILLS SECTION (04) -->
     <section id="skills" class="skills-section">
         <div class="section-inner">
-            <div class="main-section-title">● 04 SKILLS</div>
+            <div class="main-section-title">鈼?04 SKILLS</div>
             <div class="placeholder-text">[ Skills visualization coming soon... ]</div>
         </div>
     </section>
